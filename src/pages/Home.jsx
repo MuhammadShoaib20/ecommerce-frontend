@@ -38,8 +38,7 @@ const Home = () => {
     dispatch(productStart());
     try {
       const { data } = await getAllProductsAPI({ limit: 8, page: 1 });
-      // ✅ FIX: ensure data is array
-      dispatch(productsSuccess(data || []));
+      dispatch(productsSuccess(data));
     } catch (error) {
       dispatch(productFailure(error.response?.data?.message || 'Failed to fetch products'));
       toast.error('Failed to fetch products');
