@@ -8,7 +8,7 @@ import { getMyOrdersAPI } from '../services/api';
 
 const MyOrders = () => {
   const dispatch = useDispatch();
-  const { orders, loading } = useSelector((state) => state.order);
+  const { orders = [], loading } = useSelector((state) => state.order); // ✅ default empty array
 
   useEffect(() => { fetchOrders(); }, []);
 
@@ -16,7 +16,7 @@ const MyOrders = () => {
     dispatch(orderStart());
     try {
       const { data } = await getMyOrdersAPI();
-      dispatch(ordersSuccess(data.orders));
+      dispatch(ordersSuccess(data?.orders || [])); // ✅ safe fallback
     } catch (error) {
       dispatch(orderFailure(error.response?.data?.message || 'Failed to fetch orders'));
       toast.error('Failed to fetch orders');
@@ -67,16 +67,17 @@ const MyOrders = () => {
         <div className="space-y-4">
           {orders.map((order) => {
             const statusKey = order.orderStatus?.toLowerCase();
+            const orderItems = order.orderItems || []; // ✅ safe
             return (
               <div key={order._id} className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300">
 
-                {/* Order Header */}
                 <div className="px-5 py-4 border-b border-gray-50 flex flex-wrap items-center justify-between gap-3">
                   <div className="flex flex-wrap items-center gap-4">
                     <div>
                       <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Order</p>
-                      {/* ✅ FIX: safe slice on order._id */}
-                      <p className="font-mono text-xs font-bold text-gray-700">#{order._id?.slice(-10)?.toUpperCase() || 'N/A'}</p>
+                      <p className="font-mono text-xs font-bold text-gray-700">
+                        #{order._id?.slice(-10)?.toUpperCase() || 'N/A'}
+                      </p>
                     </div>
                     <div className="hidden sm:block w-px h-6 bg-gray-100" />
                     <div>
@@ -89,21 +90,20 @@ const MyOrders = () => {
                   </span>
                 </div>
 
-                {/* Order Body */}
                 <div className="p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div className="flex items-center gap-3">
                     <div className="flex -space-x-3">
-                      {order.orderItems?.slice(0, 3).map((item, i) => (
+                      {orderItems.slice(0, 3).map((item, i) => (
                         <img key={i} src={item.image} alt={item.name}
                           className="w-12 h-12 object-cover rounded-xl border-2 border-white shadow-sm" />
                       ))}
-                      {order.orderItems?.length > 3 && (
+                      {orderItems.length > 3 && (
                         <div className="w-12 h-12 bg-gray-100 rounded-xl border-2 border-white flex items-center justify-center text-xs font-bold text-gray-500">
-                          +{order.orderItems.length - 3}
+                          +{orderItems.length - 3}
                         </div>
                       )}
                     </div>
-                    <span className="text-sm text-gray-500 font-medium">{order.orderItems?.length} item{order.orderItems?.length !== 1 ? 's' : ''}</span>
+                    <span className="text-sm text-gray-500 font-medium">{orderItems.length} item{orderItems.length !== 1 ? 's' : ''}</span>
                   </div>
                   <div className="flex items-center justify-between sm:justify-end gap-6 pt-3 sm:pt-0 border-t sm:border-t-0 border-gray-50">
                     <div>
@@ -117,7 +117,6 @@ const MyOrders = () => {
                   </div>
                 </div>
 
-                {/* Progress Bar */}
                 {statusKey !== 'cancelled' && (
                   <div className="h-1 bg-gray-50">
                     <div className={`h-full transition-all duration-700 ${progressWidth[statusKey] || 'w-0'}`} />

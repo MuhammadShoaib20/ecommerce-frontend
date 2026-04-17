@@ -31,7 +31,7 @@ const Home = () => {
   const { products, loading } = useSelector((state) => state.product);
 
   useEffect(() => {
-    if (products.length === 0) fetchFeaturedProducts();
+  if (!products || products.length === 0) fetchFeaturedProducts();
   }, []);
 
   const fetchFeaturedProducts = async () => {

@@ -14,7 +14,7 @@ export default function AdminOrders() {
     try {
       setLoading(true);
       const { data } = await getAllOrdersAPI();
-      setOrders(data.orders || []);
+      setOrders(data?.orders || []);
     } catch (err) {
       toast.error('Failed to load orders');
     } finally {
@@ -42,8 +42,8 @@ export default function AdminOrders() {
     Cancelled: 'bg-red-50 text-red-600 border-red-200',
   };
 
-  // ✅ FIX: safe access for search (optional chaining)
-  const filteredOrders = orders.filter(order =>
+  // ✅ SAFE FILTER
+  const filteredOrders = (orders || []).filter(order =>
     order?._id?.toLowerCase()?.includes(searchTerm.toLowerCase()) ||
     order?.user?.name?.toLowerCase()?.includes(searchTerm.toLowerCase()) ||
     order?.user?.email?.toLowerCase()?.includes(searchTerm.toLowerCase())
@@ -53,21 +53,19 @@ export default function AdminOrders() {
     <div className="min-h-screen bg-gray-50 py-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <div>
             <h1 className="text-2xl font-black text-gray-900 tracking-tight">Orders</h1>
             <p className="text-sm text-gray-500 mt-1">Manage and track all customer orders</p>
           </div>
           <div className="flex items-center gap-2 bg-white border border-gray-100 rounded-xl px-4 py-2 shadow-sm">
-            <span className="text-sm font-bold text-gray-700">{filteredOrders.length}</span>
+            <span className="text-sm font-bold text-gray-700">{(filteredOrders || []).length}</span>
             <span className="text-xs text-gray-400 font-medium">Total Orders</span>
           </div>
         </div>
 
         <AdminNav />
 
-        {/* Search */}
         <div className="relative mt-6 mb-6 max-w-md">
           <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={13} />
           <input type="text" placeholder="Search by ID, name or email..."
@@ -79,7 +77,7 @@ export default function AdminOrders() {
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm flex items-center justify-center py-20">
             <div className="animate-spin rounded-full h-8 w-8 border-4 border-gray-200 border-t-blue-600" />
           </div>
-        ) : filteredOrders.length === 0 ? (
+        ) : (filteredOrders || []).length === 0 ? (
           <div className="bg-white rounded-2xl border-2 border-dashed border-gray-200 py-20 text-center">
             <FaBoxOpen className="text-gray-200 text-5xl mx-auto mb-4" />
             <p className="font-bold text-gray-700">No orders found</p>
@@ -108,8 +106,9 @@ export default function AdminOrders() {
                   {filteredOrders.map((order) => (
                     <tr key={order._id} className="hover:bg-gray-50 transition-colors">
                       <td className="px-6 py-4">
-                        {/* ✅ FIX: safe slice on order._id */}
-                        <span className="font-mono text-xs font-bold text-gray-700">#{order._id?.slice(-8)?.toUpperCase() || 'N/A'}</span>
+                        <span className="font-mono text-xs font-bold text-gray-700">
+                          #{order._id?.slice(-8)?.toUpperCase() || 'N/A'}
+                        </span>
                       </td>
                       <td className="px-6 py-4">
                         <p className="font-semibold text-sm text-gray-800">{order.user?.name || 'Guest'}</p>
@@ -122,7 +121,7 @@ export default function AdminOrders() {
                       </td>
                       <td className="px-6 py-4">
                         <p className="font-bold text-sm text-gray-900">${order.totalPrice?.toFixed(2)}</p>
-                        <p className="text-xs text-gray-500">{order.orderItems?.length} items</p>
+                        <p className="text-xs text-gray-500">{(order.orderItems || []).length} items</p>
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-500">
                         {new Date(order.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
@@ -145,7 +144,7 @@ export default function AdminOrders() {
               </table>
             </div>
             <div className="px-6 py-3 bg-gray-50 border-t border-gray-100">
-              <p className="text-xs text-gray-400 font-medium">{filteredOrders.length} order{filteredOrders.length !== 1 ? 's' : ''}</p>
+              <p className="text-xs text-gray-400 font-medium">{(filteredOrders || []).length} order{(filteredOrders || []).length !== 1 ? 's' : ''}</p>
             </div>
           </div>
         )}
