@@ -8,7 +8,7 @@ import { getMyOrdersAPI } from '../services/api';
 
 const MyOrders = () => {
   const dispatch = useDispatch();
-  const { orders = [], loading } = useSelector((state) => state.order); // ✅ default empty array
+  const { orders = [], loading } = useSelector((state) => state.order);
 
   useEffect(() => { fetchOrders(); }, []);
 
@@ -16,7 +16,7 @@ const MyOrders = () => {
     dispatch(orderStart());
     try {
       const { data } = await getMyOrdersAPI();
-      dispatch(ordersSuccess(data?.orders || [])); // ✅ safe fallback
+      dispatch(ordersSuccess(data?.orders || []));
     } catch (error) {
       dispatch(orderFailure(error.response?.data?.message || 'Failed to fetch orders'));
       toast.error('Failed to fetch orders');
@@ -61,13 +61,13 @@ const MyOrders = () => {
 
         <div className="mb-8">
           <h1 className="text-2xl font-black text-gray-900 tracking-tight">Order History</h1>
-          <p className="text-sm text-gray-500 mt-1">{orders.length} order{orders.length !== 1 ? 's' : ''} placed</p>
+          <p className="text-sm text-gray-500 mt-1">{orders?.length ?? 0} order{orders?.length !== 1 ? 's' : ''} placed</p>
         </div>
 
         <div className="space-y-4">
           {orders.map((order) => {
             const statusKey = order.orderStatus?.toLowerCase();
-            const orderItems = order.orderItems || []; // ✅ safe
+            const orderItems = order.orderItems || [];
             return (
               <div key={order._id} className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300">
 

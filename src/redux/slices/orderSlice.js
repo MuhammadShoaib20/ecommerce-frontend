@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  orders: [],
+  orders: [],    // ✅ always array
   order: null,
   loading: false,
   error: null
@@ -21,7 +21,7 @@ const orderSlice = createSlice({
     },
     ordersSuccess: (state, action) => {
       state.loading = false;
-      state.orders = action.payload;
+      state.orders = action.payload || [];   // ✅ safe
     },
     orderFailure: (state, action) => {
       state.loading = false;

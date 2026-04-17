@@ -40,16 +40,15 @@ export default function AdminProducts() {
 
   const handleFormSuccess = () => { setEditing(null); setShowForm(false); fetchProducts(); };
 
-  const filteredProducts = products.filter(p =>
-    p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    p.category.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredProducts = (products || []).filter(p =>
+    p.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    p.category?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
     <div className="min-h-screen bg-gray-50 py-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <div>
             <h1 className="text-2xl font-black text-gray-900 tracking-tight">Products</h1>
@@ -100,7 +99,7 @@ export default function AdminProducts() {
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
                 <div>
-                  <p className="font-bold text-gray-900 text-sm">{filteredProducts.length} Products</p>
+                  <p className="font-bold text-gray-900 text-sm">{filteredProducts?.length ?? 0} Products</p>
                 </div>
                 <div className="relative max-w-xs">
                   <FaSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={12} />

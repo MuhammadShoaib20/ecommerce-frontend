@@ -33,7 +33,7 @@ const Shop = () => {
     if (debounceTimeout.current) clearTimeout(debounceTimeout.current);
     debounceTimeout.current = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
-    }, 500); // 500ms delay
+    }, 500);
     return () => clearTimeout(debounceTimeout.current);
   }, [searchTerm]);
 
@@ -46,7 +46,7 @@ const Shop = () => {
     }
   }, [searchParams, selectedCategory]);
 
-  // Fetch products whenever filters change (including debounced search term)
+  // Fetch products whenever filters change
   useEffect(() => {
     fetchProducts();
   }, [selectedCategory, currentPage, debouncedSearchTerm, priceRange.min, priceRange.max]);
@@ -56,7 +56,6 @@ const Shop = () => {
     try {
       const params = { page: currentPage, limit: 12 };
       if (selectedCategory !== 'All') params.category = selectedCategory;
-      // Normalize search term: trim and convert to lowercase
       const normalizedSearch = debouncedSearchTerm.trim().toLowerCase();
       if (normalizedSearch) params.keyword = normalizedSearch;
       if (priceRange.min) params.minPrice = priceRange.min;
@@ -71,7 +70,6 @@ const Shop = () => {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    // Immediately trigger a search by resetting debounced term
     setDebouncedSearchTerm(searchTerm.trim().toLowerCase());
     setCurrentPage(1);
   };
@@ -91,7 +89,6 @@ const Shop = () => {
     setCurrentPage(1);
     setSearchParams({});
     setShowFilters(false);
-    // Fetch will be triggered by the useEffect due to dependency changes
   };
 
   return (
@@ -103,7 +100,7 @@ const Shop = () => {
           <div>
             <h1 className="text-2xl font-black text-gray-900 tracking-tight">Shop</h1>
             <p className="text-sm text-gray-500 mt-1">
-              {selectedCategory !== 'All' ? selectedCategory : 'All Products'} · {products.length} items
+              {selectedCategory !== 'All' ? selectedCategory : 'All Products'} · {products?.length ?? 0} items
             </p>
           </div>
 
@@ -197,10 +194,7 @@ const Shop = () => {
                   />
                 </div>
                 <button
-                  onClick={() => {
-                    // Price range change will automatically trigger fetch via useEffect
-                    setShowFilters(false);
-                  }}
+                  onClick={() => setShowFilters(false)}
                   className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-lg text-sm transition-all shadow-lg shadow-blue-500/20 mb-2"
                 >
                   Apply
@@ -220,11 +214,11 @@ const Shop = () => {
 
           {/* Products */}
           <main className="flex-1">
-            {loading && products.length === 0 ? (
+            {loading && (products?.length === 0 || !products) ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
                 {[...Array(6)].map((_, i) => <ProductCardSkeleton key={i} />)}
               </div>
-            ) : products.length > 0 ? (
+            ) : (products?.length ?? 0) > 0 ? (
               <>
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
                   {products.map((product) => <ProductCard key={product._id} product={product} />)}

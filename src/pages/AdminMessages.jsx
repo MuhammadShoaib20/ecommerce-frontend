@@ -86,12 +86,12 @@ const AdminMessages = () => {
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2 bg-white border border-gray-100 rounded-xl px-4 py-2 shadow-sm">
                 <FaInbox className="text-blue-500 text-sm" />
-                <span className="text-sm font-bold text-gray-700">{contacts.length}</span>
+                <span className="text-sm font-bold text-gray-700">{contacts?.length ?? 0}</span>
                 <span className="text-xs text-gray-400 font-medium">Inquiries</span>
               </div>
               <div className="flex items-center gap-2 bg-white border border-gray-100 rounded-xl px-4 py-2 shadow-sm">
                 <FaUsers className="text-blue-500 text-sm" />
-                <span className="text-sm font-bold text-gray-700">{subscriptions.length}</span>
+                <span className="text-sm font-bold text-gray-700">{subscriptions?.length ?? 0}</span>
                 <span className="text-xs text-gray-400 font-medium">Subscribers</span>
               </div>
             </div>
@@ -115,7 +115,7 @@ const AdminMessages = () => {
             <span className={`ml-1 text-xs px-2 py-0.5 rounded-full font-bold ${
               activeTab === 'contacts' ? 'bg-blue-50 text-blue-600' : 'bg-gray-100 text-gray-500'
             }`}>
-              {contacts.length}
+              {contacts?.length ?? 0}
             </span>
           </button>
           <button
@@ -131,7 +131,7 @@ const AdminMessages = () => {
             <span className={`ml-1 text-xs px-2 py-0.5 rounded-full font-bold ${
               activeTab === 'subscriptions' ? 'bg-blue-50 text-blue-600' : 'bg-gray-100 text-gray-500'
             }`}>
-              {subscriptions.length}
+              {subscriptions?.length ?? 0}
             </span>
           </button>
         </div>

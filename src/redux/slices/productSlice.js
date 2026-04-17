@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  products: [],
+  products: [],   // ✅ always array
   product: null,
   loading: false,
   error: null,
@@ -20,10 +20,10 @@ const productSlice = createSlice({
     },
     productsSuccess: (state, action) => {
       state.loading = false;
-      state.products = action.payload.products;
-      state.totalProducts = action.payload.totalProducts;
-      state.currentPage = action.payload.currentPage;
-      state.totalPages = action.payload.totalPages;
+      state.products = action.payload.products || [];  // ✅ safe
+      state.totalProducts = action.payload.totalProducts || 0;
+      state.currentPage = action.payload.currentPage || 1;
+      state.totalPages = action.payload.totalPages || 1;
     },
     productSuccess: (state, action) => {
       state.loading = false;

@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 
 const WishlistPage = () => {
   const dispatch = useDispatch();
-  const wishlistItems = useSelector((state) => state.wishlist.items);
+  const wishlistItems = useSelector((state) => state.wishlist.items) || [];
 
   const handleRemove = (id) => {
     dispatch(removeFromWishlist(id));
