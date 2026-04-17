@@ -42,10 +42,11 @@ export default function AdminOrders() {
     Cancelled: 'bg-red-50 text-red-600 border-red-200',
   };
 
+  // ✅ FIX: safe access for search (optional chaining)
   const filteredOrders = orders.filter(order =>
-    order._id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    order.user?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    order.user?.email?.toLowerCase().includes(searchTerm.toLowerCase())
+    order?._id?.toLowerCase()?.includes(searchTerm.toLowerCase()) ||
+    order?.user?.name?.toLowerCase()?.includes(searchTerm.toLowerCase()) ||
+    order?.user?.email?.toLowerCase()?.includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -107,7 +108,8 @@ export default function AdminOrders() {
                   {filteredOrders.map((order) => (
                     <tr key={order._id} className="hover:bg-gray-50 transition-colors">
                       <td className="px-6 py-4">
-                        <span className="font-mono text-xs font-bold text-gray-700">#{order._id.slice(-8).toUpperCase()}</span>
+                        {/* ✅ FIX: safe slice on order._id */}
+                        <span className="font-mono text-xs font-bold text-gray-700">#{order._id?.slice(-8)?.toUpperCase() || 'N/A'}</span>
                       </td>
                       <td className="px-6 py-4">
                         <p className="font-semibold text-sm text-gray-800">{order.user?.name || 'Guest'}</p>

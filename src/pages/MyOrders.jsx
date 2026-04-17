@@ -75,7 +75,8 @@ const MyOrders = () => {
                   <div className="flex flex-wrap items-center gap-4">
                     <div>
                       <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Order</p>
-                      <p className="font-mono text-xs font-bold text-gray-700">#{order._id.slice(-10).toUpperCase()}</p>
+                      {/* ✅ FIX: safe slice on order._id */}
+                      <p className="font-mono text-xs font-bold text-gray-700">#{order._id?.slice(-10)?.toUpperCase() || 'N/A'}</p>
                     </div>
                     <div className="hidden sm:block w-px h-6 bg-gray-100" />
                     <div>

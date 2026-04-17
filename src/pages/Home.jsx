@@ -38,7 +38,8 @@ const Home = () => {
     dispatch(productStart());
     try {
       const { data } = await getAllProductsAPI({ limit: 8, page: 1 });
-      dispatch(productsSuccess(data));
+      // ✅ FIX: ensure data is array
+      dispatch(productsSuccess(data || []));
     } catch (error) {
       dispatch(productFailure(error.response?.data?.message || 'Failed to fetch products'));
       toast.error('Failed to fetch products');
@@ -134,7 +135,10 @@ const Home = () => {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {products.slice(0, 8).map((product) => <ProductCard key={product._id} product={product} />)}
+              {/* ✅ FIX: safe slice using fallback empty array */}
+              {(products || []).slice(0, 8).map((product) => (
+                <ProductCard key={product._id} product={product} />
+              ))}
             </div>
           )}
         </div>
