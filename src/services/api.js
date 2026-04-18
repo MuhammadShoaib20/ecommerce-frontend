@@ -44,7 +44,7 @@ export const deleteOrderAPI = (id) => API.delete(`/admin/order/${id}`);
 // IMPORTANT: The correct endpoint for Stripe Elements is /payment/intent.
 // It expects amount in cents and returns clientSecret.
 export const processPaymentAPI = (data) => API.post('/payment/process', data); // kept for backward compatibility
-export const createPaymentIntentAPI = (data) => API.post('/payment/intent', data); // ✅ corrected
+export const createPaymentIntentAPI = (data) => API.post('/payment/intent', data); // 
 export const getStripeKeyAPI = () => API.get('/stripeapikey');
 
 // --- Newsletter Endpoints ---
